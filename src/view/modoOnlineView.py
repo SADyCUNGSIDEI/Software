@@ -1,40 +1,48 @@
 
-from PyQt4.Qt import QTabWidget, QLabel, QHBoxLayout
 from PyQt4 import QtGui
+from PyQt4.Qt import QHBoxLayout
+from PyQt4.Qt import QLabel
+from PyQt4.Qt import QTabWidget
+from PyQt4.QtGui import QCheckBox
+from PyQt4.QtGui import QPushButton
+from PyQt4.QtGui import QSpinBox
+from PyQt4.QtGui import QVBoxLayout
+from modoOnlineAnalog import ModoOnlineAnalog
 from modoOnlineDigital import ModoOnlineDigital
-from PyQt4.QtGui import QSpinBox, QVBoxLayout, QSpacerItem, QSizePolicy
 
 
-class ModoOnlineView(QtGui.QWidget):
-    
+class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
+
     def __init__(self):
         super(ModoOnlineView, self).__init__()
-        
+
         self.init_ui()
-    
+
     def init_ui(self):
-        
+
         tabs = QTabWidget()
+        tabs.addTab(ModoOnlineAnalog(), "Analogico")
         tabs.addTab(ModoOnlineDigital(), "Digital")
-        tabs.addTab(QLabel("test"), "Analogico")
-        
+
         freqLayout = QHBoxLayout()
-        
+
         freqSelector = QSpinBox()
         freqSelector.setMinimum(100)
         freqSelector.setMaximum(100000)
         freqSelector.setValue(10000)
-        
+
+        freqLayout.addWidget(QLabel("Registro: "))
+        freqLayout.addWidget(QCheckBox())
         freqLayout.addSpacing(400)
-        freqLayout.addWidget(QLabel("<b>Frequencia de medicion (Hz): </b>"))#Negrita
+        freqLayout.addWidget(QLabel("<b>Frequencia " +
+                                    "de medicion (Hz): </b>"))  # Negrita
+
         freqLayout.addWidget(freqSelector)
-        
+        freqLayout.addWidget(QPushButton("Medir"))
+
         mainLay = QVBoxLayout()
-        
+
         mainLay.addWidget(tabs)
         mainLay.addLayout(freqLayout)
-        
+
         self.setLayout(mainLay)
-        
-    
-    
