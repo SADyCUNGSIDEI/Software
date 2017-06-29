@@ -9,6 +9,8 @@ from PyQt4.QtGui import QSpinBox
 from PyQt4.QtGui import QVBoxLayout
 from modoOnlineAnalog import ModoOnlineAnalog
 from modoOnlineDigital import ModoOnlineDigital
+
+from graficos import Grafico
 import sys
 sys.path.append('../proc')
 import modoOnlineService
@@ -24,7 +26,8 @@ class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
     def init_ui(self):
 
         medirBtt = QPushButton("Medir")
-        medirBtt.clicked.connect(modoOnlineService.medir)
+
+        medirBtt.clicked.connect(self.setMedicion)
 
         tabs = QTabWidget()
         tabs.addTab(ModoOnlineAnalog(), "Analogico")
@@ -52,3 +55,11 @@ class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
         mainLay.addLayout(freqLayout)
 
         self.setLayout(mainLay)
+
+    def setMedicion(self):
+        g = Grafico();
+        modoOnlineService.setAnalogsInputs(2)
+        modoOnlineService.setTimingForInput(1000)
+        modoOnlineService.medir(g.addData)
+
+
