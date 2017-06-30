@@ -2,7 +2,7 @@ import serial
 
 CANT_ANALOG_MAX = 8
 CANT_ANALOG_MIN = 1
-port = serial.Serial("/dev/pts/13", 9600, timeout=1)
+port = serial.Serial("/dev/pts/9", 9600, timeout=1)
 
 
 def setCantAnalog(cantAnalog):
