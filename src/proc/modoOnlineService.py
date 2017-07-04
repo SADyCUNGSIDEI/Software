@@ -29,15 +29,22 @@ def medir(analogCallback, digitalCallback):
                     analog.append(
                         (ord(analogBytes[i]) << 8) + ord(analogBytes[i + 1]))
 
-                mask = 128
-                for i in range(8):
-                    bit = (ord(digitalByte) & mask) >> (7 - i)
+                for bit in __getBits(digitalByte):
                     digital.append(bit)
-                    mask = mask >> 1
 
                 analogCallback(analog)
                 digitalCallback(digital)
 
-    t=threading.Thread(target = toThread)
+    t = threading.Thread(target=toThread)
     t.setDaemon(True)
     t.start()
+
+
+def __getBits(byte):
+    mask = 128
+    toRet = []
+    for i in range(8):
+        bit = (ord(byte) & mask) >> (7 - i)
+        toRet.append(bit)
+        mask = mask >> 1
+    return toRet

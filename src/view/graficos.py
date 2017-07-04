@@ -16,8 +16,8 @@ class Graficos():
             self.analogs.append(GraficoAnalogico(
                 pendiente, ordenada, unidad, nombre))
 
-        for nombre in dataDigital:
-            self.digitals.append(GraficoDigital(nombre))
+        for (nombre, negado) in dataDigital:
+            self.digitals.append(GraficoDigital(nombre, negado))
 
     def actualizeAnalogicos(self, data):
         for i in range(len(data)):
@@ -52,7 +52,19 @@ class GraficoAnalogico():
 
 
 class GraficoDigital(GraficoAnalogico):
-
-    def __init__(self, nombre):
+    def __init__(self, nombre, negado):
         GraficoAnalogico.__init__(self, nombre=nombre)
+        self.negado = negado
         self.window.resize(250, 100)
+
+        self.colores = ['r', 'g']
+
+    def addData(self, newData):
+        trueData = newData
+        if self.negado:
+            trueData = 1 - newData
+
+        self.data.append(trueData)
+
+        self.plotItem.setXRange(len(self.data) - 20, len(self.data) + 20)
+        self.curve.setData(self.data, pen=self.colores[trueData])

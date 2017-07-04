@@ -11,16 +11,18 @@ from modoOnlineAnalog import ModoOnlineAnalog
 from modoOnlineDigital import ModoOnlineDigital
 
 from graficos import Graficos
+
 import sys
 sys.path.append('../proc')
 import modoOnlineService
+import placaService
 
 
 class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
 
     def __init__(self):
         super(ModoOnlineView, self).__init__()
-
+        placaService.changeModeOnLine()
         self.init_ui()
 
     def init_ui(self):
@@ -61,8 +63,8 @@ class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
     def setMedicion(self):
         graficosData = self.formAnalogico.getGraficosSetUp()
         if(len(graficosData) > 0):
-            graficos = Graficos(graficosData, ["a", "b"])
+            graficos = Graficos(graficosData, [("a", True), ("b", False)])
             modoOnlineService.setAnalogsInputs(len(graficosData))
             modoOnlineService.setTimingForInput(1000)
-            modoOnlineService.medir(graficos.actualizeAnalogicos, graficos.actualizeDigitales)
-
+            modoOnlineService.medir(
+                graficos.actualizeAnalogicos, graficos.actualizeDigitales)
