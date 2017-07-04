@@ -2,15 +2,15 @@ import serial
 
 CANT_ANALOG_MAX = 8
 CANT_ANALOG_MIN = 1
-port = serial.Serial("/dev/pts/9", 9600, timeout=1)
+port = serial.Serial("/dev/pts/11", 9600, timeout=1)
 
 
 def setCantAnalog(cantAnalog):
     if(cantAnalog < CANT_ANALOG_MIN or cantAnalog > CANT_ANALOG_MAX):
         raise ValueError("la cantidad de canales " +
                          "analogicos deben estar entre " +
-                         CANT_ANALOG_MIN + " y " + CANT_ANALOG_MAX +
-                         ". Fue " + cantAnalog)
+                         str(CANT_ANALOG_MIN) + " y " + str(CANT_ANALOG_MAX) +
+                         ". Fue " + str(cantAnalog))
 
     else:
 

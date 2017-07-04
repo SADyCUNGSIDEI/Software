@@ -77,6 +77,22 @@ class AnalogInputView(QtGui.QFrame):
             self.nombreTxt.setEnabled(False)
             self.unidadTxt.setEnabled(False)
 
+    def isActivated(self):
+        return self.activadoChk.isChecked()
+
+    def getSetUp(self):
+        if(self.calibrarChk.isChecked()):
+            pend = float(self.pendienteTxt.text())
+            orde = float(self.ordenadaTxt.text())
+        else:
+            pend = 1
+            orde = 0
+
+        unidad = self.unidadTxt.text()
+        nombre = self.nombreTxt.text()
+
+        return (pend, orde, unidad, nombre)
+
 
 class ModoOnlineAnalog(QtGui.QWidget):
 
@@ -90,13 +106,32 @@ class ModoOnlineAnalog(QtGui.QWidget):
     def init_gui(self):
         self._mainLayout = QGridLayout()
 
-        self._mainLayout.addWidget(AnalogInputView("Input 1"), 0, 0)
-        self._mainLayout.addWidget(AnalogInputView("Input 2"), 0, 1)
-        self._mainLayout.addWidget(AnalogInputView("Input 3"), 1, 0)
-        self._mainLayout.addWidget(AnalogInputView("Input 4"), 1, 1)
-        self._mainLayout.addWidget(AnalogInputView("Input 5"), 2, 0)
-        self._mainLayout.addWidget(AnalogInputView("Input 6"), 2, 1)
-        self._mainLayout.addWidget(AnalogInputView("Input 7"), 3, 0)
-        self._mainLayout.addWidget(AnalogInputView("Input 8"), 3, 1)
+        self.miniForms = [AnalogInputView("Input 1"),
+                          AnalogInputView("Input 2"),
+                          AnalogInputView("Input 3"),
+                          AnalogInputView("Input 4"),
+                          AnalogInputView("Input 5"),
+                          AnalogInputView("Input 6"),
+                          AnalogInputView("Input 7"),
+                          AnalogInputView("Input 8")]
+
+        self._mainLayout.addWidget(self.miniForms[0], 0, 0)
+        self._mainLayout.addWidget(self.miniForms[1], 0, 1)
+        self._mainLayout.addWidget(self.miniForms[2], 1, 0)
+        self._mainLayout.addWidget(self.miniForms[3], 1, 1)
+        self._mainLayout.addWidget(self.miniForms[4], 2, 0)
+        self._mainLayout.addWidget(self.miniForms[5], 2, 1)
+        self._mainLayout.addWidget(self.miniForms[6], 3, 0)
+        self._mainLayout.addWidget(self.miniForms[7], 3, 1)
 
         self.setLayout(self._mainLayout)
+
+    def getGraficosSetUp(self):
+
+        toRet = []
+
+        for miniForm in self.miniForms:
+            if miniForm.isActivated():
+                toRet.append(miniForm.getSetUp())
+
+        return toRet

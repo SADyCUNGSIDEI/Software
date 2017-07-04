@@ -1,21 +1,58 @@
 
+import PyQt4
 import pyqtgraph as pg
+import numpy as np
+import random
 
-from PyQt4 import QtGui
+
+class Graficos():
+
+    analogs = []
+    digitals = []
+
+    def __init__(self, dataAnalog, dataDigital):
+
+        for (pendiente, ordenada, unidad, nombre) in dataAnalog:
+            self.analogs.append(GraficoAnalogico(
+                pendiente, ordenada, unidad, nombre))
+
+        for nombre in dataDigital:
+            self.digitals.append(GraficoDigital(nombre))
+
+    def actualizeAnalogicos(self, data):
+        for i in range(len(data)):
+            self.analogs[i].addData(data[i])
+
+    def actualizeDigitales(self, data):
+        for i in range(len(self.digitals)):
+            self.digitals[i].addData(data[i])
 
 
-class Grafico():
+class GraficoAnalogico():
 
-    def __init__(self):
-        self.window = pg.plot(pen='y')
+    pendiente = 1
+    ordenada = 0
+    unidad = ""
+
+    def __init__(self, pendiente=1, ordenada=0, unidad="", nombre=""):
+        self.window = pg.plot(title=nombre, labels={'left': unidad})
         self.window.resize(400, 250)
         self.plotItem = self.window.getPlotItem()
         self.curve = self.plotItem.plot()
         self.data = []
 
+        self.pendiente = pendiente
+        self.ordenada = ordenada
+        self.unidad = unidad
+
     def addData(self, newData):
-        self.data.append(newData)
-        self.plotItem.setXRange(len(self.data) - 20 , len(self.data) + 20)
-        self.curve.setData(self.data)
+        self.data.append((newData * self.pendiente) + self.ordenada)
+        self.plotItem.setXRange(len(self.data) - 20, len(self.data) + 20)
+        self.curve.setData(self.data, pen='y')
 
 
+class GraficoDigital(GraficoAnalogico):
+
+    def __init__(self, nombre):
+        GraficoAnalogico.__init__(self, nombre=nombre)
+        self.window.resize(250, 100)

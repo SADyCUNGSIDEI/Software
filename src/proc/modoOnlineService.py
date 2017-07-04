@@ -14,15 +14,30 @@ def setTimingForInput(miliseconds):
     commandSender.setTimingOfReciv(miliseconds)
 
 
-def medir(callback):
+def medir(analogCallback, digitalCallback):
 
     def toThread():
         while True:
             res = commandSender.read(1 + cantAnalogicos * 2)
             if(res):
-                toPlot = ord(res[1]) >> 8
-                toPlot += ord(res[2])
-                callback(toPlot) 
+                analog = []
+                digital = []
+                digitalByte = res[0]
+                analogBytes = res[1:]
 
-    t = threading.Thread(target=toThread)
+                for i in range(0, len(analogBytes), 2):
+                    analog.append(
+                        (ord(analogBytes[i]) << 8) + ord(analogBytes[i + 1]))
+
+                mask = 128
+                for i in range(8):
+                    bit = (ord(digitalByte) & mask) >> (7 - i)
+                    digital.append(bit)
+                    mask = mask >> 1
+
+                analogCallback(analog)
+                digitalCallback(digital)
+
+    t=threading.Thread(target = toThread)
+    t.setDaemon(True)
     t.start()

@@ -10,7 +10,7 @@ from PyQt4.QtGui import QVBoxLayout
 from modoOnlineAnalog import ModoOnlineAnalog
 from modoOnlineDigital import ModoOnlineDigital
 
-from graficos import Grafico
+from graficos import Graficos
 import sys
 sys.path.append('../proc')
 import modoOnlineService
@@ -25,12 +25,14 @@ class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
 
     def init_ui(self):
 
+        self.formAnalogico = ModoOnlineAnalog()
+
         medirBtt = QPushButton("Medir")
 
         medirBtt.clicked.connect(self.setMedicion)
 
         tabs = QTabWidget()
-        tabs.addTab(ModoOnlineAnalog(), "Analogico")
+        tabs.addTab(self.formAnalogico, "Analogico")
         tabs.addTab(ModoOnlineDigital(), "Digital")
 
         freqLayout = QHBoxLayout()
@@ -57,9 +59,10 @@ class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
         self.setLayout(mainLay)
 
     def setMedicion(self):
-        g = Grafico();
-        modoOnlineService.setAnalogsInputs(2)
-        modoOnlineService.setTimingForInput(1000)
-        modoOnlineService.medir(g.addData)
-
+        graficosData = self.formAnalogico.getGraficosSetUp()
+        if(len(graficosData) > 0):
+            graficos = Graficos(graficosData, ["a", "b"])
+            modoOnlineService.setAnalogsInputs(len(graficosData))
+            modoOnlineService.setTimingForInput(1000)
+            modoOnlineService.medir(graficos.actualizeAnalogicos, graficos.actualizeDigitales)
 
