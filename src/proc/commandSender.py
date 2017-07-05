@@ -1,7 +1,7 @@
 import serial
 
 CANT_ANALOG_MAX = 8
-CANT_ANALOG_MIN = 1
+CANT_ANALOG_MIN = 0
 commandChar = "\x1B"
 endChar = "\x13"
 port = serial.Serial("/dev/pts/17", 9600, timeout=1)

@@ -34,7 +34,7 @@ class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
         analogSetUp = self.formAnalogico.getGraficosSetUp()
         digitalSetUp = self.formDigital.getGraficosSetUp()
 
-        if(len(analogSetUp) > 0):
+        if(len(analogSetUp) > 0 or len(digitalSetUp) > 0):
             graficos = Graficos(analogSetUp, digitalSetUp)
             modoOnlineService.setAnalogsInputs(len(analogSetUp))
             modoOnlineService.setTimingForInput(1000)
