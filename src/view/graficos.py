@@ -66,5 +66,5 @@ class GraficoDigital(GraficoAnalogico):
 
         self.data.append(trueData)
 
-        self.plotItem.setXRange(len(self.data) - 20, len(self.data) + 20)
+        self.plotItem.setXRange(len(self.data) - 5, len(self.data) + 5)
         self.curve.setData(self.data, pen=self.colores[trueData])

@@ -1,5 +1,5 @@
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, uic
 from PyQt4.QtGui import QCheckBox
 from PyQt4.QtGui import QGridLayout
 from PyQt4.QtGui import QLabel
@@ -8,74 +8,17 @@ from PyQt4.QtGui import QLineEdit
 
 class AnalogInputView(QtGui.QFrame):
 
-    _nombreInput = ""
-    mainLayout = None
+    numero = 0
 
-    def __init__(self, nombre, parent=None):
+    def __init__(self, numero, parent=None):
 
-        self._nombreInput = nombre
+        self.numero = numero
         super(AnalogInputView, self).__init__(parent)
-        self.setObjectName("AnalogInputView")
-        self.setStyleSheet(
-            "#AnalogInputView {border:1px solid rgb(0, 0, 0); }")
         self.initUI()
 
     def initUI(self):
-        self.mainLayout = QGridLayout()
-
-        nombreInputLbl = QLabel(self._nombreInput)
-
-        self.calibrarChk = QCheckBox("Calibrar")
-        self.activadoChk = QCheckBox("Activar")
-
-        self.activadoChk.setChecked(False)
-        self.activadoChk.stateChanged.connect(self.activarChanged)
-
-        self.calibrarChk.setChecked(False)
-        self.calibrarChk.stateChanged.connect(self.calibrarChanged)
-
-        self.nombreTxt = QLineEdit()
-        self.unidadTxt = QLineEdit()
-        self.pendienteTxt = QLineEdit()
-        self.ordenadaTxt = QLineEdit()
-
-        self.nombreTxt.setEnabled(False)
-        self.unidadTxt.setEnabled(False)
-        self.pendienteTxt.setEnabled(False)
-        self.ordenadaTxt.setEnabled(False)
-
-        self.mainLayout.addWidget(nombreInputLbl, 0, 0)
-        self.mainLayout.addWidget(self.activadoChk, 0, 1)
-        self.mainLayout.addWidget(self.calibrarChk, 0, 2)
-
-        self.mainLayout.addWidget(QLabel("Nombre: "), 1, 0)
-        self.mainLayout.addWidget(QLabel("Unidad: "), 2, 0)
-
-        self.mainLayout.addWidget(self.nombreTxt, 1, 1)
-        self.mainLayout.addWidget(self.unidadTxt, 2, 1)
-
-        self.mainLayout.addWidget(QLabel("Pendiente: "), 1, 2)
-        self.mainLayout.addWidget(QLabel("Ordenada: "), 2, 2)
-        self.mainLayout.addWidget(self.pendienteTxt, 1, 3)
-        self.mainLayout.addWidget(self.ordenadaTxt, 2, 3)
-
-        self.setLayout(self.mainLayout)
-
-    def calibrarChanged(self):
-        if(self.calibrarChk.isChecked()):
-            self.ordenadaTxt.setEnabled(True)
-            self.pendienteTxt.setEnabled(True)
-        else:
-            self.ordenadaTxt.setEnabled(False)
-            self.pendienteTxt.setEnabled(False)
-
-    def activarChanged(self):
-        if(self.activadoChk.isChecked()):
-            self.nombreTxt.setEnabled(True)
-            self.unidadTxt.setEnabled(True)
-        else:
-            self.nombreTxt.setEnabled(False)
-            self.unidadTxt.setEnabled(False)
+        uic.loadUi("../../gui/onlineAnalogicoMini.ui", self)
+        self.tipoInput.setText(self.tipoInput.text() + " " + str(self.numero))
 
     def isActivated(self):
         return self.activadoChk.isChecked()
@@ -106,14 +49,14 @@ class ModoOnlineAnalog(QtGui.QWidget):
     def init_gui(self):
         self._mainLayout = QGridLayout()
 
-        self.miniForms = [AnalogInputView("Input 1"),
-                          AnalogInputView("Input 2"),
-                          AnalogInputView("Input 3"),
-                          AnalogInputView("Input 4"),
-                          AnalogInputView("Input 5"),
-                          AnalogInputView("Input 6"),
-                          AnalogInputView("Input 7"),
-                          AnalogInputView("Input 8")]
+        self.miniForms = [AnalogInputView(1),
+                          AnalogInputView(2),
+                          AnalogInputView(3),
+                          AnalogInputView(4),
+                          AnalogInputView(5),
+                          AnalogInputView(6),
+                          AnalogInputView(7),
+                          AnalogInputView(8)]
 
         self._mainLayout.addWidget(self.miniForms[0], 0, 0)
         self._mainLayout.addWidget(self.miniForms[1], 0, 1)
