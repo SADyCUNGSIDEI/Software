@@ -1,66 +1,33 @@
 
-from PyQt4 import QtGui
-from PyQt4.QtGui import QCheckBox
-from PyQt4.QtGui import QGridLayout
-from PyQt4.QtGui import QLabel
-from PyQt4.QtGui import QLineEdit
+from PyQt4 import QtGui, uic
 
 
 class DigitalInputView(QtGui.QFrame):
 
-    _nombreInput = ""
-    mainLayout = None
+    numero = 0
 
-    def __init__(self, nombre, parent=None):
+    def __init__(self, numero, parent=None):
 
-        self._nombreInput = nombre
+        self.numero = numero
         super(DigitalInputView, self).__init__(parent)
-        self.setObjectName("DigitalInputView")
-        self.setStyleSheet(
-            "#DigitalInputView {border:1px solid rgb(0, 0, 0); }")
         self.initUI()
 
     def initUI(self):
-        self.mainLayout = QGridLayout()
+        uic.loadUi("../../gui/onlineDigitalMini.ui", self)
+        self.setEnabled(False)
 
-        nombreInputLbl = QLabel(self._nombreInput)
+        self.tipoInput.setText(self.tipoInput.text() + " " + str(self.numero))
 
-        self.negarChk = QCheckBox("Negar")
-        self.activadoChk = QCheckBox("Activar")
+    def getSetUp(self):
+        nombre = self.nombreTxt.text()
+        negado = self.negadoChk.isChecked()
 
-        self.activadoChk.setChecked(False)
-        self.activadoChk.stateChanged.connect(self.activarChanged)
-
-        self.negarChk.setChecked(False)
-        self.negarChk.stateChanged.connect(self.negadoChange)
-
-        self.nombreTxt = QLineEdit()
-
-        self.nombreTxt.setEnabled(False)
-
-        self.mainLayout.addWidget(nombreInputLbl, 0, 0)
-        self.mainLayout.addWidget(self.activadoChk, 0, 1)
-        self.mainLayout.addWidget(self.negarChk, 0, 2)
-
-        self.mainLayout.addWidget(QLabel("Nombre: "), 1, 0)
-
-        self.mainLayout.addWidget(self.nombreTxt, 1, 1)
-
-        self.setLayout(self.mainLayout)
-
-    def negadoChange(self):
-        pass
-
-    def activarChanged(self):
-        if(self.activadoChk.isChecked()):
-            self.nombreTxt.setEnabled(True)
-        else:
-            self.nombreTxt.setEnabled(False)
+        return (nombre, negado)
 
 
 class ModoOnlineDigital(QtGui.QWidget):
 
-    _mainLayout = None
+    _nextMini = 0
 
     def __init__(self):
         super(ModoOnlineDigital, self).__init__()
@@ -68,15 +35,42 @@ class ModoOnlineDigital(QtGui.QWidget):
         self.init_gui()
 
     def init_gui(self):
-        self._mainLayout = QGridLayout()
+        uic.loadUi("../../gui/modoOnlineForm.ui", self)
 
-        self._mainLayout.addWidget(DigitalInputView("Input 1"), 0, 0)
-        self._mainLayout.addWidget(DigitalInputView("Input 2"), 0, 1)
-        self._mainLayout.addWidget(DigitalInputView("Input 3"), 1, 0)
-        self._mainLayout.addWidget(DigitalInputView("Input 4"), 1, 1)
-        self._mainLayout.addWidget(DigitalInputView("Input 5"), 2, 0)
-        self._mainLayout.addWidget(DigitalInputView("Input 6"), 2, 1)
-        self._mainLayout.addWidget(DigitalInputView("Input 7"), 3, 0)
-        self._mainLayout.addWidget(DigitalInputView("Input 8"), 3, 1)
+        self.miniForms = []
 
-        self.setLayout(self._mainLayout)
+        for i in range(1, 8 + 1):
+            self.miniForms.append(DigitalInputView(i))
+
+        self.mainLayout.addWidget(self.miniForms[0], 0, 0)
+        self.mainLayout.addWidget(self.miniForms[1], 0, 1)
+        self.mainLayout.addWidget(self.miniForms[2], 1, 0)
+        self.mainLayout.addWidget(self.miniForms[3], 1, 1)
+        self.mainLayout.addWidget(self.miniForms[4], 2, 0)
+        self.mainLayout.addWidget(self.miniForms[5], 2, 1)
+        self.mainLayout.addWidget(self.miniForms[6], 3, 0)
+        self.mainLayout.addWidget(self.miniForms[7], 3, 1)
+
+        self.addBtt.clicked.connect(self.addMiniForm)
+        self.rmvBtt.clicked.connect(self.removeMiniForm)
+
+    def addMiniForm(self):
+        self.miniForms[self._nextMini].setEnabled(True)
+        if(self._nextMini < len(self.miniForms)):
+            self._nextMini += 1
+
+    def removeMiniForm(self):
+        if(self._nextMini > 0):
+            self._nextMini -= 1
+
+        self.miniForms[self._nextMini].setEnabled(False)
+
+    def getGraficosSetUp(self):
+
+        toRet = []
+
+        for miniForm in self.miniForms:
+            if miniForm.isEnabled():
+                toRet.append(miniForm.getSetUp())
+
+        return toRet

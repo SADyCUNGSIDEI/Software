@@ -1,12 +1,12 @@
 
 import sys
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, uic
 from PyQt4.Qt import QHBoxLayout
 from modoOnlineView import ModoOnlineView
 
 
-class MainWindow(QtGui.QWidget):
+class MainWindow(QtGui.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -15,15 +15,9 @@ class MainWindow(QtGui.QWidget):
 
     def initUI(self):
 
-        onlineView = ModoOnlineView()
+        uic.loadUi("../../gui/mainwindow.ui", self)
+        self.setCentralWidget(ModoOnlineView())
 
-        mainLay = QHBoxLayout()
-        mainLay.addWidget(onlineView)
-        onlineView.show()
-        self.setLayout(mainLay)
-
-        self.setGeometry(300, 300, 800, 600)
-        self.setWindowTitle('Sistema de adquisicion de datos y control')
         self.show()
 
 
