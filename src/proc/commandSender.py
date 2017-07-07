@@ -4,7 +4,7 @@ CANT_ANALOG_MAX = 8
 CANT_ANALOG_MIN = 0
 commandChar = "\x1B"
 endChar = "\x13"
-port = serial.Serial("/dev/pts/17", 9600, timeout=1)
+port = serial.Serial("/dev/pts/26", 9600, timeout=1)
 
 
 def pause():
@@ -30,7 +30,8 @@ def setCantAnalog(cantAnalog):
 
 
 def setTimingOfReciv(miliseconds):
-    __send("T")  # TODO
+
+    __send("T" + str(miliseconds))
 
 
 def read(cantBytes):
@@ -39,4 +40,3 @@ def read(cantBytes):
 
 def __send(data):
     port.write(commandChar + data + endChar)
-

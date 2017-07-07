@@ -28,6 +28,28 @@
      <height>27</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuArchivo">
+    <property name="title">
+     <string>Archivo</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuModo">
+    <property name="title">
+     <string>Modo</string>
+    </property>
+    <widget class="QMenu" name="menuMedicion">
+     <property name="title">
+      <string>Adquisicion de Datos</string>
+     </property>
+     <addaction name="actionAutomatizacion"/>
+     <addaction name="actionInstrumentacion"/>
+    </widget>
+    <addaction name="menuMedicion"/>
+    <addaction name="actionIntervalo_de_tiempo"/>
+    <addaction name="actionAutomatizacion_2"/>
+   </widget>
+   <addaction name="menuArchivo"/>
+   <addaction name="menuModo"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -47,6 +69,26 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <action name="actionInstrumentacion">
+   <property name="text">
+    <string>Instrumentacion</string>
+   </property>
+  </action>
+  <action name="actionAutomatizacion">
+   <property name="text">
+    <string>Automatizacion</string>
+   </property>
+  </action>
+  <action name="actionIntervalo_de_tiempo">
+   <property name="text">
+    <string>Medicion de tiempos</string>
+   </property>
+  </action>
+  <action name="actionAutomatizacion_2">
+   <property name="text">
+    <string>Automatizacion</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

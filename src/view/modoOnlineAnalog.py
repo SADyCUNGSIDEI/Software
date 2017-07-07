@@ -29,8 +29,8 @@ class AnalogInputView(QtGui.QFrame):
             pend = float(self.pendienteTxt.text())
             orde = float(self.ordenadaTxt.text())
 
-        unidad = self.unidadTxt.text()
-        nombre = self.nombreTxt.text()
+        unidad = str(self.unidadTxt.text())
+        nombre = str(self.nombreTxt.text())
 
         return (pend, orde, unidad, nombre)
 

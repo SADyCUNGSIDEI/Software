@@ -13,6 +13,10 @@ import placaService
 
 class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
 
+    graficos = None
+    analogSetUp = []
+    digitalSetUp = []
+
     def __init__(self):
         super(ModoOnlineView, self).__init__()
         placaService.changeModeOnLine()
@@ -27,18 +31,47 @@ class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
         self.tabs.addTab(self.formAnalogico, "Analogico")
         self.tabs.addTab(self.formDigital, "Digital")
 
-        self.comenzarBtt.clicked.connect(self.setMedicion)
-        self.detenerBtt.clicked.connect(self.pauseMedition)
+        self.comenzarBtt.clicked.connect(self.iniciaMedicion)
+        self.detenerBtt.clicked.connect(self.stopMedicion)
+        self.pausarBtt.clicked.connect(self.pauseMedicion)
+
+    def iniciaMedicion(self):
+        if not placaService.isSeteado():
+            self.setMedicion()
+
+        if len(self.analogSetUp) > 0 or len(self.digitalSetUp) > 0:
+
+                modoOnlineService.setTimingForInput(
+                    int(self.intervaloSpin.text()))
+                modoOnlineService.medir(self.graficos.actualizeAnalogicos,
+                                        self.graficos.actualizeDigitales)
+
+        self.tabs.setEnabled(False)
+
+        self.comenzarBtt.setEnabled(False)
+        self.pausarBtt.setEnabled(True)
+        self.detenerBtt.setEnabled(True)
+
+    def pauseMedicion(self):
+        placaService.pause()
+
+        self.comenzarBtt.setEnabled(True)
+        self.pausarBtt.setEnabled(False)
+        self.detenerBtt.setEnabled(True)
 
     def setMedicion(self):
-        analogSetUp = self.formAnalogico.getGraficosSetUp()
-        digitalSetUp = self.formDigital.getGraficosSetUp()
+        self.analogSetUp = self.formAnalogico.getGraficosSetUp()
+        self.digitalSetUp = self.formDigital.getGraficosSetUp()
 
-        if(len(analogSetUp) > 0 or len(digitalSetUp) > 0):
-            graficos = Graficos(analogSetUp, digitalSetUp)
-            modoOnlineService.setAnalogsInputs(len(analogSetUp))
-            modoOnlineService.setTimingForInput(1000)
-            modoOnlineService.medir(graficos.actualizeAnalogicos, graficos.actualizeDigitales)
+        self.graficos = Graficos(self.analogSetUp, self.digitalSetUp)
+        modoOnlineService.setAnalogsInputs(len(self.analogSetUp))
 
-    def pauseMedition(self):
-        placaService.pause()
+    def stopMedicion(self):
+        self.graficos.closeAll()
+        placaService.changeModeOnLine()
+
+        self.tabs.setEnabled(True)
+
+        self.comenzarBtt.setEnabled(True)
+        self.pausarBtt.setEnabled(False)
+        self.detenerBtt.setEnabled(False)

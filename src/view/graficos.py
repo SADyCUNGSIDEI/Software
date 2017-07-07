@@ -1,8 +1,5 @@
 
-import PyQt4
-import pyqtgraph as pg
-import numpy as np
-import random
+from graficosUtils import plot
 
 
 class Graficos():
@@ -27,6 +24,17 @@ class Graficos():
         for i in range(len(self.digitals)):
             self.digitals[i].addData(data[i])
 
+    def closeAll(self):
+
+        for graficoAnalogico in self.analogs:
+            graficoAnalogico.close()
+
+        for graficoDigital in self.digitals:
+            graficoDigital.close()
+
+        del self.analogs[:]
+        del self.digitals[:]
+
 
 class GraficoAnalogico():
 
@@ -35,7 +43,7 @@ class GraficoAnalogico():
     unidad = ""
 
     def __init__(self, pendiente=1, ordenada=0, unidad="", nombre=""):
-        self.window = pg.plot(title=nombre, labels={'left': unidad})
+        self.window = plot(title=nombre, labels={'left': unidad})
         self.window.resize(400, 250)
         self.plotItem = self.window.getPlotItem()
         self.curve = self.plotItem.plot()
@@ -50,14 +58,16 @@ class GraficoAnalogico():
         self.plotItem.setXRange(len(self.data) - 20, len(self.data) + 20)
         self.curve.setData(self.data, pen='y')
 
+    def close(self):
+        self.window.close()
+
 
 class GraficoDigital(GraficoAnalogico):
+
     def __init__(self, nombre, negado):
         GraficoAnalogico.__init__(self, nombre=nombre)
         self.negado = negado
         self.window.resize(250, 100)
-
-        self.colores = ['r', 'g']
 
     def addData(self, newData):
         trueData = newData
@@ -67,4 +77,8 @@ class GraficoDigital(GraficoAnalogico):
         self.data.append(trueData)
 
         self.plotItem.setXRange(len(self.data) - 5, len(self.data) + 5)
-        self.curve.setData(self.data, pen=self.colores[trueData])
+
+        if trueData == 1:
+            self.curve.setData(self.data, pen='g')
+        else:
+            self.curve.setData(self.data, pen='r')

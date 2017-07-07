@@ -2,7 +2,6 @@
 import sys
 
 from PyQt4 import QtGui, uic
-from PyQt4.Qt import QHBoxLayout
 from modoOnlineView import ModoOnlineView
 
 

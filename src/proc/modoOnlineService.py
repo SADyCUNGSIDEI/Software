@@ -1,13 +1,17 @@
 import commandSender
 import threading
+import placaService
 
 cantAnalogicos = 0
 
 
 def setAnalogsInputs(cantPines):
     global cantAnalogicos
+
     commandSender.setCantAnalog(cantPines)
-    cantAnalogicos += cantPines
+    cantAnalogicos = cantPines
+    placaService.__estados["seteado"] = True
+    print cantAnalogicos
 
 
 def setTimingForInput(miliseconds):
@@ -16,9 +20,15 @@ def setTimingForInput(miliseconds):
 
 def medir(analogCallback, digitalCallback):
 
+    placaService.__estados["midiendo"] = True
+
     def toThread():
         while True:
             res = commandSender.read(1 + cantAnalogicos * 2)
+
+            if not placaService.__estados["midiendo"]:
+                break
+
             if(res):
                 analog = []
                 digital = []
@@ -35,9 +45,8 @@ def medir(analogCallback, digitalCallback):
                 analogCallback(analog)
                 digitalCallback(digital)
 
-    t = threading.Thread(target=toThread)
-    t.setDaemon(True)
-    t.start()
+    thread = threading.Thread(target=toThread)
+    thread.start()
 
 
 def __getBits(byte):
