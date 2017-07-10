@@ -19,6 +19,12 @@ def changeModeOnLine():
     __estados["seteado"] = False
     __estados["midiendo"] = False
 
+def changeModeRegistro():
+    pause()
+    commandSender.setMode(2)
+    __estados["seteado"] = False
+    __estados["midiendo"] = False
+
 
 def pause():
     __estados["midiendo"] = False

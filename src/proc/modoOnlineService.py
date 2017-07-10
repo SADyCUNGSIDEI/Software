@@ -18,6 +18,10 @@ def setTimingForInput(miliseconds):
     commandSender.setTimingOfReciv(miliseconds)
 
 
+def setTimingForRegistro(segundos):
+    commandSender.setTimingOfRegistro(segundos)
+
+
 def medir(analogCallback, digitalCallback):
 
     placaService.__estados["midiendo"] = True

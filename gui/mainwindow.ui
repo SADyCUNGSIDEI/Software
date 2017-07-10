@@ -32,6 +32,8 @@
     <property name="title">
      <string>Archivo</string>
     </property>
+    <addaction name="actionAbrir_Graficos"/>
+    <addaction name="actionGuardar_Graficos"/>
    </widget>
    <widget class="QMenu" name="menuModo">
     <property name="title">
@@ -48,11 +50,29 @@
     <addaction name="actionIntervalo_de_tiempo"/>
     <addaction name="actionAutomatizacion_2"/>
    </widget>
+   <widget class="QMenu" name="menuExperimento">
+    <property name="title">
+     <string>Experimento</string>
+    </property>
+    <widget class="QMenu" name="menuRegistro">
+     <property name="title">
+      <string>Registro</string>
+     </property>
+     <addaction name="actionDescargar_Datos"/>
+     <addaction name="actionInfo_Memoria"/>
+     <addaction name="actionBorrar_Memoria"/>
+    </widget>
+    <addaction name="menuRegistro"/>
+   </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuModo"/>
+   <addaction name="menuExperimento"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -81,12 +101,42 @@
   </action>
   <action name="actionIntervalo_de_tiempo">
    <property name="text">
-    <string>Medicion de tiempos</string>
+    <string>Medicion de Tiempos</string>
    </property>
   </action>
   <action name="actionAutomatizacion_2">
    <property name="text">
     <string>Automatizacion</string>
+   </property>
+  </action>
+  <action name="actionAbrir_Graficos">
+   <property name="text">
+    <string>Abrir Graficos</string>
+   </property>
+  </action>
+  <action name="actionGuardar_Graficos">
+   <property name="text">
+    <string>Guardar Graficos</string>
+   </property>
+  </action>
+  <action name="actionDescargar_datos_de_Registro">
+   <property name="text">
+    <string>Descargar Datos de Registro</string>
+   </property>
+  </action>
+  <action name="actionDescargar_Datos">
+   <property name="text">
+    <string>Descargar Datos</string>
+   </property>
+  </action>
+  <action name="actionInfo_Memoria">
+   <property name="text">
+    <string>Info. Memoria</string>
+   </property>
+  </action>
+  <action name="actionBorrar_Memoria">
+   <property name="text">
+    <string>Borrar Memoria</string>
    </property>
   </action>
  </widget>

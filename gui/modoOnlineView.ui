@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>769</width>
+    <width>790</width>
     <height>476</height>
    </rect>
   </property>
@@ -65,7 +65,7 @@
       </widget>
      </item>
      <item row="3" column="2">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="intervaloLbl">
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Intervalo de Medicion (&lt;span style=&quot; font-weight:600;&quot;&gt;ms&lt;/span&gt;): &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
