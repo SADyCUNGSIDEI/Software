@@ -42,5 +42,13 @@ def read(cantBytes):
     return port.read(cantBytes)
 
 
+def getFromRegistro():
+    __send("d")
+
+    registro = read(port.inWaiting())
+
+    return registro
+
+
 def __send(data):
     port.write(commandChar + data + endChar)

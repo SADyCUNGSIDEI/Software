@@ -1,6 +1,7 @@
 import commandSender
 import threading
 import placaService
+import registroDecoder
 
 cantAnalogicos = 0
 
@@ -11,7 +12,6 @@ def setAnalogsInputs(cantPines):
     commandSender.setCantAnalog(cantPines)
     cantAnalogicos = cantPines
     placaService.__estados["seteado"] = True
-    print cantAnalogicos
 
 
 def setTimingForInput(miliseconds):
@@ -51,6 +51,15 @@ def medir(analogCallback, digitalCallback):
 
     thread = threading.Thread(target=toThread)
     thread.start()
+
+
+def getFromRegistro():
+
+    data = commandSender.getFromRegistro()
+
+    return registroDecoder.decode(data)
+
+
 
 
 def __getBits(byte):
