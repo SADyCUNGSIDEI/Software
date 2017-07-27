@@ -8,13 +8,87 @@ __codigosInicioReg = {"0": "vueltaEnergia",
 def decode(data):
 
     toRet = []
+    i = 0
 
-    firstHeader = __translateHeader(data[0:25])
+    while i < len(data):
+        if  len(data) >= i + 28 and __isHeader(data[i: i + 28]):
+            currentHeader = __translateHeader(data[i:i + 28])
+            toRet.append({"type": "header",
+                          "data": currentHeader})
 
-    toRet.append({"type": "header",
-                  "data": firstHeader})
+            i += 27
+        else:
+            cantAnalogicos = int(currentHeader["canalesAnalogicos"])
+            cantAnalogicosAmp = int(currentHeader["canalesInAmp"])
+            cantDigitales = int(currentHeader["canalesDigitales"])
+
+            offsetAnalog = cantAnalogicos * 2
+            offsetInAmp = (cantAnalogicos * 2) + (cantAnalogicosAmp * 2)
+
+            analogRawData = data[i:i + offsetAnalog]
+            inAmpRawData = data[i + offsetAnalog:i + offsetInAmp]
+            digitalRawData = data[i + offsetInAmp]
+
+            analogData = []
+            inAmpData = []
+            digitalData = []
+
+            for analog in range(0, len(analogRawData), 2):
+                analogData.append(__getAnalogValue(
+                    analogRawData[analog], analogRawData[analog + 1]))
+
+            for inAmp in range(0, len(inAmpRawData), 2):
+                inAmpData.append(__getAnalogValue(
+                    inAmpRawData[inAmp], inAmpRawData[inAmp + 1]))
+
+            digitalData = __getDigitalValues(digitalRawData, cantDigitales)
+
+            dataSection = {"analogicos": analogData,
+                           "inAmp": inAmpData,
+                           "digitales": digitalData}
+
+            toRet.append({"type": "dataSection",
+                          "data": dataSection})
+
+            # dos bytes por cada canal analogico, dos por cada canal in amp, y
+            # uno por TODOS los digitales
+            i = i + (cantAnalogicos * 2) + (cantAnalogicosAmp * 2) + 1
 
     return toRet
+
+
+def __isHeader(toTest):
+    if toTest[0] != "\xFF" or toTest[1] != "\xFF":
+        return False
+    if toTest[25] != "\xFF" or toTest[26] != "\xFF":
+        return False
+
+    for char in toTest[2:23]:
+        if ord(char) - 48 >= 10 or ord(char) - 30 < 0:
+            return False
+
+    return True 
+
+def __getAnalogValue(lowByte, highByte):
+    lowDecimal = ord(lowByte)
+    highDecimal = ord(highByte)
+
+    return (highDecimal << 8) + lowDecimal
+
+
+def __getDigitalValues(byte, cant):
+    binaryData = bin(ord(byte))[8:1:-1]#al reves
+    binaryData = binaryData + "00000000" # para que aparezcan almenos 8 bits. Si sobra no importa
+    toRet = []
+
+    for i in range(cant):
+        if binaryData[i] == "0":
+            toRet.append(False)
+        else:
+            toRet.append(True)
+
+    return toRet
+
 
 
 def __translateHeader(header):
@@ -35,3 +109,5 @@ def __translateHeader(header):
     }
 
     return headerToRet
+
+
