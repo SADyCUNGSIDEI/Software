@@ -1,5 +1,6 @@
 import json
 
+
 def saveRegistroData(filename, data):
 
     if not filename.endsWith(".sre"):
@@ -10,3 +11,9 @@ def saveRegistroData(filename, data):
     fileToWrite.write(json.dumps(data))
 
 
+def openGraficoData(filename):
+    f = open(filename, "r")
+    data = f.read()
+    f.close()
+
+    return json.loads(data)

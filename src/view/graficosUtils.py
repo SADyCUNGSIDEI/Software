@@ -5,9 +5,12 @@ import pyqtgraph as pg
 
 class PlotWindow(pg.PlotWidget):
 
-    def __init__(self, title=None, **kargs):
+    def __init__(self, title=None,**kargs):
         pg.mkQApp()
-        self.win = UnclosableMainWindow()
+        if kargs["isUnclosable"]:
+            self.win = UnclosableMainWindow()
+        else:
+            self.win = QtGui.QMainWindow()
         pg.PlotWidget.__init__(self, **kargs)
         self.win.setCentralWidget(self)
         for m in ['resize']:
@@ -40,7 +43,7 @@ def plot(*args, **kargs):
     pg.mkQApp()
 
     pwArgList = ['title', 'labels', 'name', 'left',
-                 'right', 'top', 'bottom', 'background']
+                 'right', 'top', 'bottom', 'background', "isUnclosable"]
     pwArgs = {}
     dataArgs = {}
     for k in kargs:
