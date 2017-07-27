@@ -63,6 +63,7 @@
      <addaction name="actionBorrar_Memoria"/>
     </widget>
     <addaction name="menuRegistro"/>
+    <addaction name="actionSetear_Reloj"/>
    </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuModo"/>
@@ -137,6 +138,11 @@
   <action name="actionBorrar_Memoria">
    <property name="text">
     <string>Borrar Memoria</string>
+   </property>
+  </action>
+  <action name="actionSetear_Reloj">
+   <property name="text">
+    <string>Setear Reloj</string>
    </property>
   </action>
  </widget>

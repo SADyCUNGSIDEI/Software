@@ -7,6 +7,7 @@ from PyQt4.QtGui import QFileDialog
 from modoOnlineView import ModoOnlineView
 
 import graficos
+from relojConfig import RelojConfig
 
 sys.path.append('../proc')
 import modoOnlineService
@@ -28,6 +29,7 @@ class MainWindow(QtGui.QMainWindow):
 
         self.actionDescargar_Datos.triggered.connect(self.descargaDatos)
         self.actionAbrir_Graficos.triggered.connect(self.abrirGraficos)
+        self.actionSetear_Reloj.triggered.connect(self.configReloj)
 
         self.show()
 
@@ -45,6 +47,10 @@ class MainWindow(QtGui.QMainWindow):
         if fname is not None:
             data = fileService.openGraficoData(fname)
             graficos.openGraficosOf(data)
+
+    def configReloj(self):
+        self._new_window = RelojConfig()
+        self._new_window.show()
 
 
 def main():
