@@ -22,11 +22,26 @@ class RelojConfig(QtGui.QDialog):
         self.timer.timeout.connect(self.actualizeTime)
         self.timer.start(1000)
 
-
         self.horaPc_btt.clicked.connect(self.setHoraPc)
+        self.horaEquipo_btt.clicked.connect(self.setHoraEquipo)
+        self.send_btt.clicked.connect(self.sendHora)
+        self.cancel_btt.clicked.connect(self.close)
+
+    def setHoraEquipo(self):
+        horaEquipoRaw = placaService.getDateTime()
+        horaEquipo = QDateTime(horaEquipoRaw[0], horaEquipoRaw[1],
+                               horaEquipoRaw[2], horaEquipoRaw[3],
+                               horaEquipoRaw[4], horaEquipoRaw[5])
+
+        self.dateTimeEdit.setDateTime(horaEquipo)
 
     def setHoraPc(self):
         self.dateTimeEdit.setDateTime(QDateTime.currentDateTime())
+
+    def sendHora(self):
+        toSend = self.dateTimeEdit.dateTime().toString("yyyy/MM/dd hh:mm:ss")
+
+        placaService.setDateTime(toSend)
 
     def actualizeTime(self):
         self.dateTimeEdit.setDateTime(self.dateTimeEdit.dateTime().addSecs(1))

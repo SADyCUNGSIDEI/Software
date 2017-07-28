@@ -4,7 +4,7 @@ CANT_ANALOG_MAX = 8
 CANT_ANALOG_MIN = 0
 commandChar = "\x1B"
 endChar = "\x13"
-port = serial.Serial("/dev/pts/7", 9600, timeout=1)
+port = serial.Serial("/dev/pts/8", 9600, timeout=1)
 
 
 def pause():
@@ -36,6 +36,16 @@ def setTimingOfReciv(miliseconds):
 
 def setTimingOfRegistro(seconds):
     __send("R" + str(seconds))
+
+
+def setDateTime(dateTimeStr):
+    __send("H" + dateTimeStr)
+
+
+def getDateTime():
+    __send("h")
+
+    return read(14)
 
 
 def read(cantBytes):
