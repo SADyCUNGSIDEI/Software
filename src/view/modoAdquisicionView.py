@@ -1,6 +1,6 @@
 
 from PyQt4 import QtGui, uic
-from modoAdquisicionAnalog import ModoAdquisicionAnalog
+from modoAdquisicionAnalog import ModoAutomatAnalog, ModoInstrAnalog
 from modoAdquisicionDigital import ModoAdquisicionDigital
 
 from graficos import Graficos
@@ -19,14 +19,9 @@ class ModoAdquisicionView(QtGui.QWidget):
 
     def __init__(self):
         super(ModoAdquisicionView, self).__init__()
-        placaService.changeModeAutomatOnLine()
-        self.init_ui()
 
     def init_ui(self):
         uic.loadUi("../../gui/modoAdquisicionView.ui", self)
-
-        self.formAnalogico = ModoAdquisicionAnalog()
-        self.formDigital = ModoAdquisicionDigital()
 
         self.tabs.addTab(self.formAnalogico, "Analogico")
         self.tabs.addTab(self.formDigital, "Digital")
@@ -60,15 +55,7 @@ class ModoAdquisicionView(QtGui.QWidget):
             self.iniciaOnline()
 
     def iniciaOnline(self):
-        placaService.changeModeAutomatOnLine()
         self.openGraficos()
-
-        if len(self.analogSetUp) > 0 or len(self.digitalSetUp) > 0:
-
-            modoAdquisicionService.setTimingForInput(
-                int(self.intervaloSpin.text()))
-            modoAdquisicionService.medir(self.graficos.actualizeAnalogicos,
-                                    self.graficos.actualizeDigitales)
 
         self.tabs.setEnabled(False)
 
@@ -77,9 +64,6 @@ class ModoAdquisicionView(QtGui.QWidget):
         self.detenerBtt.setEnabled(True)
 
     def iniciaRegistro(self):
-        placaService.changeModeAutomatRegistro()
-
-        modoAdquisicionService.setTimingForRegistro(int(self.intervaloSpin.text()))
 
         self.tabs.setEnabled(False)
 
@@ -96,8 +80,6 @@ class ModoAdquisicionView(QtGui.QWidget):
     def setMedicion(self):
         self.analogSetUp = self.formAnalogico.getGraficosSetUp()
         self.digitalSetUp = self.formDigital.getGraficosSetUp()
-
-        modoAdquisicionService.setAnalogsAutomatInputs(len(self.analogSetUp))
 
     def openGraficos(self):
         self.graficos = Graficos(self.analogSetUp, self.digitalSetUp)
@@ -117,4 +99,64 @@ class ModoAdquisicionView(QtGui.QWidget):
 class ModoAutomatizacionView(ModoAdquisicionView):
 
     def __init__(self):
-        pass
+        super(ModoAutomatizacionView, self).__init__()
+
+        placaService.changeModeAutomatOnLine()
+
+        self.formAnalogico = ModoAutomatAnalog()
+        self.formDigital = ModoAdquisicionDigital()
+
+        self.init_ui()
+
+        self.modo_lbl.setText("<html><head/><body><p><span style=\" font-size:12pt; font-weight:600;\">" +
+                              "Modo Automatizacion</span></p></body></html>")
+
+    def iniciaOnline(self):
+        super(ModoAutomatizacionView, self).iniciaOnline()
+
+        placaService.changeModeAutomatOnLine()
+
+        if len(self.analogSetUp) > 0 or len(self.digitalSetUp) > 0:
+
+            modoAdquisicionService.setTimingForInput(
+                int(self.intervaloSpin.text()))
+            modoAdquisicionService.medir(self.graficos.actualizeAnalogicos,
+                                         self.graficos.actualizeDigitales)
+
+    def iniciaRegistro(self):
+        super(ModoAutomatizacionView, self).iniciaRegistro()
+
+        placaService.changeModeAutomatRegistro()
+
+        modoAdquisicionService.setTimingForRegistro(
+            int(self.intervaloSpin.text()))
+
+    def setMedicion(self):
+        super(ModoAutomatizacionView, self).setMedicion()
+
+        modoAdquisicionService.setAnalogsAutomatInputs(len(self.analogSetUp))
+
+
+class ModoInstrumentacionView(ModoAdquisicionView):
+
+    def __init__(self):
+        super(ModoInstrumentacionView, self).__init__()
+
+        placaService.changeModeAutomatOnLine()
+
+        self.formAnalogico = ModoInstrAnalog()
+        self.formDigital = ModoAdquisicionDigital()
+
+        self.init_ui()
+
+        self.modo_lbl.setText("<html><head/><body><p><span style=\" font-size:12pt; font-weight:600;\">" +
+                              "Modo Instrumentacion</span></p></body></html>")
+
+    def iniciaOnline(self):
+        super(ModoAutomatizacionView, self).iniciaOnline()
+
+    def iniciaRegistro(self):
+        super(ModoAutomatizacionView, self).iniciaRegistro()
+
+    def setMedicion(self):
+        super(ModoAutomatizacionView, self).setMedicion()

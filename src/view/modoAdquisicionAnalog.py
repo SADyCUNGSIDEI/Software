@@ -17,6 +17,12 @@ class AnalogInputView(QtGui.QFrame):
         self.setEnabled(False)
         self.tipoInput.setText(self.tipoInput.text() + " " + str(self.numero))
 
+        self.setAmpVisible(False)
+
+    def setAmpVisible(self, visible):
+        self.amp_lbl.setVisible(visible)
+        self.amp_slider.setVisible(visible)
+
     def getSetUp(self):
         pend = 1
         orde = 0
@@ -42,20 +48,6 @@ class ModoAdquisicionAnalog(QtGui.QWidget):
     def init_gui(self):
         uic.loadUi("../../gui/modoAdquisicionForm.ui", self)
 
-        self.miniForms = []
-
-        for i in range(1, 8 + 1):
-            self.miniForms.append(AnalogInputView(i))
-
-        self.mainLayout.addWidget(self.miniForms[0], 0, 0)
-        self.mainLayout.addWidget(self.miniForms[1], 0, 1)
-        self.mainLayout.addWidget(self.miniForms[2], 1, 0)
-        self.mainLayout.addWidget(self.miniForms[3], 1, 1)
-        self.mainLayout.addWidget(self.miniForms[4], 2, 0)
-        self.mainLayout.addWidget(self.miniForms[5], 2, 1)
-        self.mainLayout.addWidget(self.miniForms[6], 3, 0)
-        self.mainLayout.addWidget(self.miniForms[7], 3, 1)
-
         self.addBtt.clicked.connect(self.addMiniForm)
         self.rmvBtt.clicked.connect(self.removeMiniForm)
 
@@ -79,3 +71,41 @@ class ModoAdquisicionAnalog(QtGui.QWidget):
                 toRet.append(miniForm.getSetUp())
 
         return toRet
+
+
+class ModoAutomatAnalog(ModoAdquisicionAnalog):
+
+    def __init__(self):
+        super(ModoAutomatAnalog, self).__init__()
+
+        self.miniForms = []
+
+        for i in range(1, 8 + 1):
+            self.miniForms.append(AnalogInputView(i))
+
+        self.mainLayout.addWidget(self.miniForms[0], 0, 0)
+        self.mainLayout.addWidget(self.miniForms[1], 0, 1)
+        self.mainLayout.addWidget(self.miniForms[2], 1, 0)
+        self.mainLayout.addWidget(self.miniForms[3], 1, 1)
+        self.mainLayout.addWidget(self.miniForms[4], 2, 0)
+        self.mainLayout.addWidget(self.miniForms[5], 2, 1)
+        self.mainLayout.addWidget(self.miniForms[6], 3, 0)
+        self.mainLayout.addWidget(self.miniForms[7], 3, 1)
+
+
+class ModoInstrAnalog(ModoAdquisicionAnalog):
+
+    def __init__(self):
+        super(ModoInstrAnalog, self).__init__()
+
+        self.miniForms = []
+
+        for i in range(1, 4 + 1):
+            mini = AnalogInputView(i)
+            mini.setAmpVisible(True)
+            self.miniForms.append(mini)
+
+        self.mainLayout.addWidget(self.miniForms[0], 0, 0)
+        self.mainLayout.addWidget(self.miniForms[1], 0, 1)
+        self.mainLayout.addWidget(self.miniForms[2], 1, 0)
+        self.mainLayout.addWidget(self.miniForms[3], 1, 1)

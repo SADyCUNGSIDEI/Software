@@ -117,14 +117,14 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="amp_lbl">
        <property name="text">
         <string>Aplificacion: </string>
        </property>
       </widget>
      </item>
      <item row="3" column="2">
-      <widget class="QSlider" name="horizontalSlider">
+      <widget class="QSlider" name="amp_slider">
        <property name="maximum">
         <number>3</number>
        </property>

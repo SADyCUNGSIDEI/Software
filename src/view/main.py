@@ -3,8 +3,8 @@ import sys
 
 import os
 from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QFileDialog
-from modoAdquisicionView import ModoAdquisicionView
+from PyQt4.QtGui import QFileDialog, QMessageBox
+from modoAdquisicionView import ModoAutomatizacionView, ModoInstrumentacionView
 
 import graficos
 from relojConfig import RelojConfig
@@ -24,13 +24,42 @@ class MainWindow(QtGui.QMainWindow):
     def initUI(self):
 
         uic.loadUi("../../gui/mainwindow.ui", self)
-        self.setCentralWidget(ModoAdquisicionView())
+        self.setCentralWidget(ModoAutomatizacionView())
+
+        self.actionAutomatizacion.triggered.connect(self.changeModoAutomat)
+        self.actionInstrumentacion.triggered.connect(self.changeModoInstr)
 
         self.actionDescargar_Datos.triggered.connect(self.descargaDatos)
         self.actionAbrir_Graficos.triggered.connect(self.abrirGraficos)
         self.actionSetear_Reloj.triggered.connect(self.configReloj)
 
         self.show()
+
+    def changeModoInstr(self):
+        if self.confirmaChangeModo():
+            self.setCentralWidget(ModoInstrumentacionView())
+
+            QMessageBox.information(self, "Cambio de Modo",
+                                    "Se cambio a Modo Instrumentacion",
+                                    QMessageBox.Ok)
+
+    def changeModoAutomat(self):
+        if self.confirmaChangeModo():
+            self.setCentralWidget(ModoAutomatizacionView())
+            QMessageBox.information(self, "Cambio de Modo",
+                                    "Se cambio a Modo Automatizacion",
+                                    QMessageBox.Ok)
+
+    def confirmaChangeModo(self):
+
+        res = QMessageBox.question(self, 'Atencion',
+                                   "Quiere cambiar de modo? Se perderan los cambios",
+                                   QMessageBox.Yes | QMessageBox.No)
+
+        if res == QMessageBox.Yes:
+            return True
+        else:
+            return False
 
     def descargaDatos(self):
         fname = QFileDialog.getSaveFileName(self, 'Guardar como archivo de registro',
