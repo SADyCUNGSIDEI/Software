@@ -6,13 +6,15 @@ import registroDecoder
 cantAnalogicos = 0
 
 
-def setAnalogsInputs(cantPines):
+def setAnalogsAutomatInputs(cantPines):
     global cantAnalogicos
 
     commandSender.setCantAnalog(cantPines)
     cantAnalogicos = cantPines
     placaService.__estados["seteado"] = True
 
+def setAnalogsInAmpInputs(cantPines, amps):
+    pass
 
 def setTimingForInput(miliseconds):
     commandSender.setTimingOfReciv(miliseconds)

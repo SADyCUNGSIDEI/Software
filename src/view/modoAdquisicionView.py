@@ -7,11 +7,11 @@ from graficos import Graficos
 
 import sys
 sys.path.append('../proc')
-import modoOnlineService
+import modoAdquisicionService
 import placaService
 
 
-class ModoAdquisicionView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
+class ModoAdquisicionView(QtGui.QWidget):
 
     graficos = None
     analogSetUp = []
@@ -65,9 +65,9 @@ class ModoAdquisicionView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
 
         if len(self.analogSetUp) > 0 or len(self.digitalSetUp) > 0:
 
-            modoOnlineService.setTimingForInput(
+            modoAdquisicionService.setTimingForInput(
                 int(self.intervaloSpin.text()))
-            modoOnlineService.medir(self.graficos.actualizeAnalogicos,
+            modoAdquisicionService.medir(self.graficos.actualizeAnalogicos,
                                     self.graficos.actualizeDigitales)
 
         self.tabs.setEnabled(False)
@@ -79,7 +79,7 @@ class ModoAdquisicionView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
     def iniciaRegistro(self):
         placaService.changeModeAutomatRegistro()
 
-        modoOnlineService.setTimingForRegistro(int(self.intervaloSpin.text()))
+        modoAdquisicionService.setTimingForRegistro(int(self.intervaloSpin.text()))
 
         self.tabs.setEnabled(False)
 
@@ -97,7 +97,7 @@ class ModoAdquisicionView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
         self.analogSetUp = self.formAnalogico.getGraficosSetUp()
         self.digitalSetUp = self.formDigital.getGraficosSetUp()
 
-        modoOnlineService.setAnalogsInputs(len(self.analogSetUp))
+        modoAdquisicionService.setAnalogsAutomatInputs(len(self.analogSetUp))
 
     def openGraficos(self):
         self.graficos = Graficos(self.analogSetUp, self.digitalSetUp)
@@ -112,3 +112,9 @@ class ModoAdquisicionView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
         self.comenzarBtt.setEnabled(True)
         self.pausarBtt.setEnabled(False)
         self.detenerBtt.setEnabled(False)
+
+
+class ModoAutomatizacionView(ModoAdquisicionView):
+
+    def __init__(self):
+        pass

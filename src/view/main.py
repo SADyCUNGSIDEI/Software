@@ -10,8 +10,7 @@ import graficos
 from relojConfig import RelojConfig
 
 sys.path.append('../proc')
-import modoOnlineService
-import placaService
+import modoAdquisicionService
 import fileService
 
 
@@ -37,7 +36,7 @@ class MainWindow(QtGui.QMainWindow):
         fname = QFileDialog.getSaveFileName(self, 'Guardar como archivo de registro',
                                             os.path.expanduser('~user'), "SADyC Registrer Files (*.sre)")
         if fname is not None:
-            registroData = modoOnlineService.getFromRegistro()
+            registroData = modoAdquisicionService.getFromRegistro()
             fileService.saveRegistroData(fname, registroData)
 
     def abrirGraficos(self):
