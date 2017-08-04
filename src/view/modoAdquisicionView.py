@@ -57,6 +57,13 @@ class ModoAdquisicionView(QtGui.QWidget):
     def iniciaOnline(self):
         self.openGraficos()
 
+        if len(self.analogSetUp) > 0 or len(self.digitalSetUp) > 0:
+
+            modoAdquisicionService.setTimingForInput(
+                int(self.intervaloSpin.text()))
+            modoAdquisicionService.medir(self.graficos.actualizeAnalogicos,
+                                         self.graficos.actualizeDigitales)
+
         self.tabs.setEnabled(False)
 
         self.comenzarBtt.setEnabled(False)
@@ -64,6 +71,8 @@ class ModoAdquisicionView(QtGui.QWidget):
         self.detenerBtt.setEnabled(True)
 
     def iniciaRegistro(self):
+        modoAdquisicionService.setTimingForRegistro(
+            int(self.intervaloSpin.text()))
 
         self.tabs.setEnabled(False)
 
@@ -87,7 +96,6 @@ class ModoAdquisicionView(QtGui.QWidget):
     def stopMedicion(self):
         if self.graficos is not None:
             self.graficos.closeAll()
-        placaService.pause()
 
         self.tabs.setEnabled(True)
 
@@ -108,33 +116,21 @@ class ModoAutomatizacionView(ModoAdquisicionView):
 
         self.init_ui()
 
-        self.modo_lbl.setText("<html><head/><body><p><span style=\" font-size:12pt; font-weight:600;\">" +
-                              "Modo Automatizacion</span></p></body></html>")
-
-    def iniciaOnline(self):
-        super(ModoAutomatizacionView, self).iniciaOnline()
-
-        placaService.changeModeAutomatOnLine()
-
-        if len(self.analogSetUp) > 0 or len(self.digitalSetUp) > 0:
-
-            modoAdquisicionService.setTimingForInput(
-                int(self.intervaloSpin.text()))
-            modoAdquisicionService.medir(self.graficos.actualizeAnalogicos,
-                                         self.graficos.actualizeDigitales)
-
-    def iniciaRegistro(self):
-        super(ModoAutomatizacionView, self).iniciaRegistro()
-
-        placaService.changeModeAutomatRegistro()
-
-        modoAdquisicionService.setTimingForRegistro(
-            int(self.intervaloSpin.text()))
+        self.modo_lbl.setText("Modo Automatizacion")
 
     def setMedicion(self):
         super(ModoAutomatizacionView, self).setMedicion()
 
+        if self.registroChk.isChecked():
+            placaService.changeModeAutomatRegistro()
+        else:
+            placaService.changeModeAutomatOnLine()
+
         modoAdquisicionService.setAnalogsAutomatInputs(len(self.analogSetUp))
+
+    def stopMedicion(self):
+        placaService.changeModeAutomatOnLine()
+        super(ModoAutomatizacionView, self).stopMedicion()
 
 
 class ModoInstrumentacionView(ModoAdquisicionView):
@@ -142,21 +138,28 @@ class ModoInstrumentacionView(ModoAdquisicionView):
     def __init__(self):
         super(ModoInstrumentacionView, self).__init__()
 
-        placaService.changeModeAutomatOnLine()
+        placaService.changeModeInstrOnLine()
 
         self.formAnalogico = ModoInstrAnalog()
         self.formDigital = ModoAdquisicionDigital()
 
         self.init_ui()
 
-        self.modo_lbl.setText("<html><head/><body><p><span style=\" font-size:12pt; font-weight:600;\">" +
-                              "Modo Instrumentacion</span></p></body></html>")
-
-    def iniciaOnline(self):
-        super(ModoAutomatizacionView, self).iniciaOnline()
-
-    def iniciaRegistro(self):
-        super(ModoAutomatizacionView, self).iniciaRegistro()
+        self.modo_lbl.setText("Modo Instrumentacion")
 
     def setMedicion(self):
         super(ModoAutomatizacionView, self).setMedicion()
+
+        if self.registroChk.isChecked():
+            placaService.changeModeInstrRegistro()
+        else:
+            placaService.changeModeInstrOnLine()
+
+        amps = self.formAnalogico.getAmps()
+
+        modoAdquisicionService.setAnalogsInAmpInputs(len(self.analogSetUp))
+        modoAdquisicionService.setAmplificaciones(amps)
+
+    def stopMedicion(self):
+        placaService.changeModeInstrOnLine()
+        super(ModoAutomatizacionView, self).stopMedicion()

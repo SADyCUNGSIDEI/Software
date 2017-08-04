@@ -13,8 +13,19 @@ def setAnalogsAutomatInputs(cantPines):
     cantAnalogicos = cantPines
     placaService.__estados["seteado"] = True
 
-def setAnalogsInAmpInputs(cantPines, amps):
-    pass
+
+def setAnalogsInAmpInputs(cantPines):
+    global cantAnalogicos
+
+    commandSender.setCantAnalogInAmp(cantPines)
+    cantAnalogicos = cantPines
+    placaService.__estados["seteado"] = True
+
+
+def setAmplificaciones(amps):
+    for i in range(len(amps)):
+        commandSender.setAmpForInAmp(amps[i], i)
+
 
 def setTimingForInput(miliseconds):
     commandSender.setTimingOfReciv(miliseconds)
@@ -60,8 +71,6 @@ def getFromRegistro():
     data = commandSender.getFromRegistro()
 
     return registroDecoder.decode(data)
-
-
 
 
 def __getBits(byte):

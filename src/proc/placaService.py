@@ -19,10 +19,23 @@ def changeModeAutomatOnLine():
     __estados["seteado"] = False
     __estados["midiendo"] = False
 
-
 def changeModeAutomatRegistro():
     pause()
     commandSender.setMode(2)
+    __estados["seteado"] = False
+    __estados["midiendo"] = False
+
+
+def changeModeInstrOnLine():
+    pause()
+    commandSender.setMode(3)
+    __estados["seteado"] = False
+    __estados["midiendo"] = False
+
+
+def changeModeInstrRegistro():
+    pause()
+    commandSender.setMode(4)
     __estados["seteado"] = False
     __estados["midiendo"] = False
 

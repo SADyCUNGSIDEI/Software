@@ -35,6 +35,9 @@ class AnalogInputView(QtGui.QFrame):
 
         return (pend, orde, unidad, nombre)
 
+    def getAmp(self):
+        return int(self.amp_slider.value())
+
 
 class ModoAdquisicionAnalog(QtGui.QWidget):
 
@@ -109,3 +112,12 @@ class ModoInstrAnalog(ModoAdquisicionAnalog):
         self.mainLayout.addWidget(self.miniForms[1], 0, 1)
         self.mainLayout.addWidget(self.miniForms[2], 1, 0)
         self.mainLayout.addWidget(self.miniForms[3], 1, 1)
+
+    def getAmps(self):
+        toRet = []
+
+        for miniForm in self.miniForms:
+            if miniForm.isEnabled():
+                toRet.append(miniForm.getAmp())
+
+        return toRet

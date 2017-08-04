@@ -29,6 +29,21 @@ def setCantAnalog(cantAnalog):
         __send("A" + charCantAnalog)
 
 
+def setCantAnalogInAmp(cantAnalogInAmp):
+    charCantAnalog = chr(cantAnalogInAmp + 48)
+    __send("B" + charCantAnalog)
+
+
+def setAmpForInAmp(amp, pinInAmp):
+    inAmpStr = str(pinInAmp + 9)  # de 09 a 12
+    if pinInAmp + 9 < 10:
+        inAmpStr = "0" + inAmpStr
+
+    ampChar = chr(amp)  # de 0 a 3
+
+    __send("C" + inAmpStr + ampChar)
+
+
 def setTimingOfReciv(miliseconds):
 
     __send("T" + str(miliseconds))
