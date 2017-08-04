@@ -1,7 +1,7 @@
 
 from PyQt4 import QtGui, uic
-from modoOnlineAnalog import ModoOnlineAnalog
-from modoOnlineDigital import ModoOnlineDigital
+from modoAdquisicionAnalog import ModoAdquisicionAnalog
+from modoAdquisicionDigital import ModoAdquisicionDigital
 
 from graficos import Graficos
 
@@ -11,22 +11,22 @@ import modoOnlineService
 import placaService
 
 
-class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
+class ModoAdquisicionView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
 
     graficos = None
     analogSetUp = []
     digitalSetUp = []
 
     def __init__(self):
-        super(ModoOnlineView, self).__init__()
-        placaService.changeModeOnLine()
+        super(ModoAdquisicionView, self).__init__()
+        placaService.changeModeAutomatOnLine()
         self.init_ui()
 
     def init_ui(self):
-        uic.loadUi("../../gui/modoOnlineView.ui", self)
+        uic.loadUi("../../gui/modoAdquisicionView.ui", self)
 
-        self.formAnalogico = ModoOnlineAnalog()
-        self.formDigital = ModoOnlineDigital()
+        self.formAnalogico = ModoAdquisicionAnalog()
+        self.formDigital = ModoAdquisicionDigital()
 
         self.tabs.addTab(self.formAnalogico, "Analogico")
         self.tabs.addTab(self.formDigital, "Digital")
@@ -60,7 +60,7 @@ class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
             self.iniciaOnline()
 
     def iniciaOnline(self):
-        placaService.changeModeOnLine()
+        placaService.changeModeAutomatOnLine()
         self.openGraficos()
 
         if len(self.analogSetUp) > 0 or len(self.digitalSetUp) > 0:
@@ -77,7 +77,7 @@ class ModoOnlineView(QtGui.QWidget):  # TODO: cambiar nombre a mas adecuado
         self.detenerBtt.setEnabled(True)
 
     def iniciaRegistro(self):
-        placaService.changeModeRegistro()
+        placaService.changeModeAutomatRegistro()
 
         modoOnlineService.setTimingForRegistro(int(self.intervaloSpin.text()))
 

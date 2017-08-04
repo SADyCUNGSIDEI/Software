@@ -4,7 +4,7 @@ import sys
 import os
 from PyQt4 import QtGui, uic
 from PyQt4.QtGui import QFileDialog
-from modoOnlineView import ModoOnlineView
+from modoAdquisicionView import ModoAdquisicionView
 
 import graficos
 from relojConfig import RelojConfig
@@ -25,7 +25,7 @@ class MainWindow(QtGui.QMainWindow):
     def initUI(self):
 
         uic.loadUi("../../gui/mainwindow.ui", self)
-        self.setCentralWidget(ModoOnlineView())
+        self.setCentralWidget(ModoAdquisicionView())
 
         self.actionDescargar_Datos.triggered.connect(self.descargaDatos)
         self.actionAbrir_Graficos.triggered.connect(self.abrirGraficos)

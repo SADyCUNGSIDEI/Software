@@ -1,10 +1,5 @@
 
 from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QCheckBox
-from PyQt4.QtGui import QPushButton
-from PyQt4.QtGui import QGridLayout
-from PyQt4.QtGui import QLabel
-from PyQt4.QtGui import QLineEdit
 
 
 class AnalogInputView(QtGui.QFrame):
@@ -18,7 +13,7 @@ class AnalogInputView(QtGui.QFrame):
         self.initUI()
 
     def initUI(self):
-        uic.loadUi("../../gui/onlineAnalogicoMini.ui", self)
+        uic.loadUi("../../gui/adquisicionAnalogicoMini.ui", self)
         self.setEnabled(False)
         self.tipoInput.setText(self.tipoInput.text() + " " + str(self.numero))
 
@@ -35,17 +30,17 @@ class AnalogInputView(QtGui.QFrame):
         return (pend, orde, unidad, nombre)
 
 
-class ModoOnlineAnalog(QtGui.QWidget):
+class ModoAdquisicionAnalog(QtGui.QWidget):
 
     _nextMini = 0
 
     def __init__(self):
-        super(ModoOnlineAnalog, self).__init__()
+        super(ModoAdquisicionAnalog, self).__init__()
 
         self.init_gui()
 
     def init_gui(self):
-        uic.loadUi("../../gui/modoOnlineForm.ui", self)
+        uic.loadUi("../../gui/modoAdquisicionForm.ui", self)
 
         self.miniForms = []
 

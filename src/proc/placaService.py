@@ -13,14 +13,14 @@ def isMidiendo():
     return __estados["midiendo"]
 
 
-def changeModeOnLine():
+def changeModeAutomatOnLine():
     pause()
     commandSender.setMode(1)
     __estados["seteado"] = False
     __estados["midiendo"] = False
 
 
-def changeModeRegistro():
+def changeModeAutomatRegistro():
     pause()
     commandSender.setMode(2)
     __estados["seteado"] = False

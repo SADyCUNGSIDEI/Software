@@ -13,7 +13,7 @@ class DigitalInputView(QtGui.QFrame):
         self.initUI()
 
     def initUI(self):
-        uic.loadUi("../../gui/onlineDigitalMini.ui", self)
+        uic.loadUi("../../gui/adquisicionDigitalMini.ui", self)
         self.setEnabled(False)
 
         self.tipoInput.setText(self.tipoInput.text() + " " + str(self.numero))
@@ -25,17 +25,17 @@ class DigitalInputView(QtGui.QFrame):
         return (nombre, negado)
 
 
-class ModoOnlineDigital(QtGui.QWidget):
+class ModoAdquisicionDigital(QtGui.QWidget):
 
     _nextMini = 0
 
     def __init__(self):
-        super(ModoOnlineDigital, self).__init__()
+        super(ModoAdquisicionDigital, self).__init__()
 
         self.init_gui()
 
     def init_gui(self):
-        uic.loadUi("../../gui/modoOnlineForm.ui", self)
+        uic.loadUi("../../gui/modoAdquisicionForm.ui", self)
 
         self.miniForms = []
 

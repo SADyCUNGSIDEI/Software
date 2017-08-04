@@ -4,9 +4,7 @@ from PyQt4.QtCore import QDateTime, QTimer
 
 import sys
 sys.path.append('../proc')
-import modoOnlineService
 import placaService
-import fileService
 
 
 class RelojConfig(QtGui.QDialog):
