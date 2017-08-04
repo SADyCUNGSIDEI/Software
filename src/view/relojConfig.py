@@ -43,11 +43,10 @@ class RelojConfig(QtGui.QDialog):
 
         placaService.setDateTime(toSend)
 
+        QtGui.QMessageBox.information(self, 'Informacion',
+                                      "El reloj del equipo se ha seteado con la hora \n" + toSend,
+                                      QtGui.QMessageBox.Ok)
+        self.close()
+
     def actualizeTime(self):
         self.dateTimeEdit.setDateTime(self.dateTimeEdit.dateTime().addSecs(1))
-
-if __name__ == '__main__':
-    app = QtGui.QApplication([])
-    gui = RelojConfig()
-    gui.show()
-    app.exec_()

@@ -49,8 +49,8 @@ class MainWindow(QtGui.QMainWindow):
             graficos.openGraficosOf(data)
 
     def configReloj(self):
-        self._new_window = RelojConfig()
-        self._new_window.show()
+        self.relojConfig = RelojConfig()
+        self.relojConfig.show()
 
 
 def main():
