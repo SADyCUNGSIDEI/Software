@@ -7,14 +7,20 @@ class Graficos():
     analogs = []
     digitals = []
 
-    def __init__(self, dataAnalog, dataDigital):
+    def __init__(self, dataAnalog, dataDigital, intervalo, unidadTiempo, fecha):
+
+        intervaloStr = str(intervalo) + " " + unidadTiempo
+        fechaStr = fecha.toString("yyyy/MM/dd hh:mm:ss")
 
         for (pendiente, ordenada, unidad, nombre) in dataAnalog:
             self.analogs.append(GraficoAnalogico(
-                pendiente, ordenada, unidad, nombre))
+                pendiente, ordenada, unidad, nombre, intervalo=intervalo,
+                intervaloStr=intervaloStr, fechaStr=fechaStr))
 
         for (nombre, negado) in dataDigital:
-            self.digitals.append(GraficoDigital(nombre, negado))
+            self.digitals.append(GraficoDigital(
+                nombre, negado, intervalo=intervalo,
+                intervaloStr=intervaloStr, fechaStr=fechaStr))
 
     def actualizeAnalogicos(self, data):
         for i in range(len(data)):
@@ -47,7 +53,6 @@ class GraficosRegistro():
         for i in range(cantAnalogicos):
             self.analogs.append(GraficoAnalogico(
                 nombre=dateString, isUnclosable=False))
-
         for i in range(cantInAmp):
             self.inAmps.append(GraficoAnalogico(
                 nombre=dateString, isUnclosable=False))
@@ -87,10 +92,22 @@ class GraficoAnalogico():
     ordenada = 0
     unidad = ""
 
-    def __init__(self, pendiente=1, ordenada=0, unidad="", nombre="Grafico Analogico", isUnclosable=True):
+    intervalo = 1
+
+    def __init__(self, pendiente=1, ordenada=0, unidad="", nombre="Grafico Analogico",
+                 isUnclosable=True, intervalo=1, intervaloStr="", fechaStr=""):
+
+        if nombre is "":
+            nombre = "Grafico Analogico"
+
+        self.xValues = []
+        self.intervalo = intervalo
+
         self.window = plot(title=nombre, labels={
-                           'left': unidad}, isUnclosable=isUnclosable)
-        self.window.resize(400, 250)
+                           'left': unidad}, isUnclosable=isUnclosable,
+                           intervaloStr=intervaloStr, fechaStr=fechaStr)
+
+        self.window.resize(400, 300)
         self.plotItem = self.window.getPlotItem()
         self.curve = self.plotItem.plot()
         self.data = []
@@ -101,8 +118,13 @@ class GraficoAnalogico():
 
     def addData(self, newData):
         self.data.append((newData * self.pendiente) + self.ordenada)
-        self.plotItem.setXRange(len(self.data) - 20, len(self.data) + 20)
-        self.curve.setData(self.data, pen='y')
+        self.xValues.append(len(self.xValues) * self.intervalo)
+
+        dataLen = len(self.data)
+
+        self.plotItem.setXRange(
+            (dataLen + 20) * self.intervalo, (dataLen - 20) * self.intervalo)
+        self.curve.setData(y=self.data, x=self.xValues, pen='y')
 
     def close(self):
         self.window.close()
@@ -110,9 +132,15 @@ class GraficoAnalogico():
 
 class GraficoDigital(GraficoAnalogico):
 
-    def __init__(self, nombre="Grafico Digital", negado=False, isUnclosable=True):
+    def __init__(self, nombre="Grafico Digital", negado=False,
+                 isUnclosable=True, intervalo=1, intervaloStr="", fechaStr=""):
+
+        if nombre is "":
+            nombre = "Grafico Digital"
+
         GraficoAnalogico.__init__(
-            self, nombre=nombre, isUnclosable=isUnclosable)
+            self, nombre=nombre, isUnclosable=isUnclosable, intervalo=intervalo,
+            intervaloStr=intervaloStr, fechaStr=fechaStr)
         self.negado = negado
         self.window.resize(250, 100)
 
@@ -131,7 +159,7 @@ class GraficoDigital(GraficoAnalogico):
             self.curve.setData(self.data, pen='r')
 
 
-def openGraficosOf(data):
+def openGraficosOf(data):  # TODO: cambiar a un disenio mas desacoplado
 
     firstHeader = data[0]
 

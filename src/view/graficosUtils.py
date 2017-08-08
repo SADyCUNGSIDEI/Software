@@ -1,5 +1,5 @@
 
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui, QtCore, uic
 import pyqtgraph as pg
 
 
@@ -11,12 +11,24 @@ class PlotWindow(pg.PlotWidget):
             self.win = UnclosableMainWindow()
         else:
             self.win = QtGui.QMainWindow()
+
+        self.layout = QtGui.QVBoxLayout()
+
         pg.PlotWidget.__init__(self, **kargs)
-        self.win.setCentralWidget(self)
+        self.layout.addWidget(self)
+        self.layout.addWidget(QtGui.QLabel("Intervalo de Medicion: " + kargs["intervaloStr"]))
+        self.layout.addWidget(QtGui.QLabel("Fecha de Inicio: " + kargs["fechaStr"]))
+
+        centralWid = QtGui.QWidget()
+        centralWid.setLayout(self.layout)
+
+        self.win.setCentralWidget(centralWid)
+
         for m in ['resize']:
             setattr(self, m, getattr(self.win, m))
         if title is not None:
             self.win.setWindowTitle(title)
+        self.showGrid(True, False, 1.0)
         self.win.show()
 
 
@@ -43,7 +55,8 @@ def plot(*args, **kargs):
     pg.mkQApp()
 
     pwArgList = ['title', 'labels', 'name', 'left',
-                 'right', 'top', 'bottom', 'background', "isUnclosable"]
+                 'right', 'top', 'bottom', 'background', "isUnclosable",
+                 "intervaloStr", "fechaStr"]
     pwArgs = {}
     dataArgs = {}
     for k in kargs:

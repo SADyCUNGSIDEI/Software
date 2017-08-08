@@ -1,5 +1,6 @@
 
-from PyQt4 import QtGui, uic
+from PyQt4 import QtCore, QtGui, uic
+from PyQt4.QtCore import QDateTime
 from modoAdquisicionAnalog import ModoAutomatAnalog, ModoInstrAnalog
 from modoAdquisicionDigital import ModoAdquisicionDigital
 
@@ -16,6 +17,7 @@ class ModoAdquisicionView(QtGui.QWidget):
     graficos = None
     analogSetUp = []
     digitalSetUp = []
+    unidadTiempo = "ms"
 
     def __init__(self):
         super(ModoAdquisicionView, self).__init__()
@@ -35,11 +37,13 @@ class ModoAdquisicionView(QtGui.QWidget):
     def setRegistro(self):
         if self.registroChk.isChecked():
             self.intervaloLbl.setText("Intervalo de medicion (<b>s</b>): ")
+            self.unidadTiempo = "s"
             self.intervaloSpin.setValue(1)
             self.intervaloSpin.setMinimum(1)
             self.intervaloSpin.setMaximum(3600)
         else:
             self.intervaloLbl.setText("Intervalo de medicion (<b>ms</b>): ")
+            self.unidadTiempo = "ms"
             self.intervaloSpin.setValue(50)
             self.intervaloSpin.setMinimum(1)
             self.intervaloSpin.setMaximum(10000)
@@ -91,11 +95,15 @@ class ModoAdquisicionView(QtGui.QWidget):
         self.digitalSetUp = self.formDigital.getGraficosSetUp()
 
     def openGraficos(self):
-        self.graficos = Graficos(self.analogSetUp, self.digitalSetUp)
+        if self.graficos is None:
+            intervalo = int(self.intervaloSpin.text())
+            self.graficos = Graficos(self.analogSetUp, self.digitalSetUp,
+                                    intervalo, self.unidadTiempo, QDateTime.currentDateTime())
 
     def stopMedicion(self):
         if self.graficos is not None:
             self.graficos.closeAll()
+            self.graficos = None
 
         self.tabs.setEnabled(True)
 
