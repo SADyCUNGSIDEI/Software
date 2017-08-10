@@ -156,7 +156,7 @@ class ModoInstrumentacionView(ModoAdquisicionView):
         self.modo_lbl.setText("Modo Instrumentacion")
 
     def setMedicion(self):
-        super(ModoAutomatizacionView, self).setMedicion()
+        super(ModoInstrumentacionView, self).setMedicion()
 
         if self.registroChk.isChecked():
             placaService.changeModeInstrRegistro()
@@ -170,4 +170,4 @@ class ModoInstrumentacionView(ModoAdquisicionView):
 
     def stopMedicion(self):
         placaService.changeModeInstrOnLine()
-        super(ModoAutomatizacionView, self).stopMedicion()
+        super(ModoInstrumentacionView, self).stopMedicion()
