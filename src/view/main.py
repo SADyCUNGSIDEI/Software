@@ -11,6 +11,7 @@ from relojConfig import RelojConfig
 
 sys.path.append('../proc')
 import modoAdquisicionService
+from registroDecoder import DesencodedData
 import fileService
 
 
@@ -74,7 +75,9 @@ class MainWindow(QtGui.QMainWindow):
 
         if fname is not None:
             data = fileService.openGraficoData(fname)
-            graficos.openGraficosOf(data)
+            desencodedData = DesencodedData(data)
+
+            graficos.openGraficosOf(desencodedData)
 
     def configReloj(self):
         self.relojConfig = RelojConfig()

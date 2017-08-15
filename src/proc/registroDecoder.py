@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 
 __codigosInicioReg = {"0": "vueltaEnergia",
                       "1": "init",
@@ -11,7 +13,7 @@ def decode(data):
     i = 0
 
     while i < len(data):
-        if  len(data) >= i + 28 and __isHeader(data[i: i + 28]):
+        if len(data) >= i + 28 and __isHeader(data[i: i + 28]):
             currentHeader = __translateHeader(data[i:i + 28])
             toRet.append({"type": "header",
                           "data": currentHeader})
@@ -67,7 +69,8 @@ def __isHeader(toTest):
         if ord(char) - 48 >= 10 or ord(char) - 30 < 0:
             return False
 
-    return True 
+    return True
+
 
 def __getAnalogValue(lowByte, highByte):
     lowDecimal = ord(lowByte)
@@ -77,8 +80,9 @@ def __getAnalogValue(lowByte, highByte):
 
 
 def __getDigitalValues(byte, cant):
-    binaryData = bin(ord(byte))[8:1:-1]#al reves
-    binaryData = binaryData + "00000000" # para que aparezcan almenos 8 bits. Si sobra no importa
+    binaryData = bin(ord(byte))[8:1:-1]  # al reves
+    # para que aparezcan almenos 8 bits. Si sobra no importa
+    binaryData = binaryData + "00000000"
     toRet = []
 
     for i in range(cant):
@@ -88,7 +92,6 @@ def __getDigitalValues(byte, cant):
             toRet.append(True)
 
     return toRet
-
 
 
 def __translateHeader(header):
@@ -111,3 +114,125 @@ def __translateHeader(header):
     return headerToRet
 
 
+def _getDateStringOf(data):
+    dateString = data["data"]["anio"] + "/" + \
+        data["data"]["mes"] + \
+        "/" + data["data"]["dia"] + \
+        " " + data["data"]["hora"] + ":" + \
+        data["data"]["minutos"] + ":" + \
+        data["data"]["segundos"]
+
+    return dateString
+
+
+class DesencodedData():
+
+    def __init__(self, jsonData):
+
+        self._chunks = []
+        splitChunk = []
+
+        cantAnalogicos = 0
+        cantInAmp = 0
+        cantDigitales = 0
+
+        dateString = ""
+
+        for data in jsonData:
+            if data["type"] == "header":
+                if data["data"]["codigoInicio"] == "init":
+                    if len(splitChunk) is not 0:
+                        self._chunks.append(DataChunk(splitChunk,
+                                      cantAnalogicos,
+                                      cantInAmp,
+                                      cantDigitales,
+                                      intervalo,
+                                      dateString))
+
+                        print splitChunk
+                        del splitChunk[:]
+
+                    cantAnalogicos, cantInAmp, cantDigitales, intervalo, dateString = self._getMetadataOf(data)
+                else:
+                    splitChunk.append(data)
+
+            else:
+                splitChunk.append(data)
+
+        # Se agrega el ultimo chunk que no tiene codigo de inicio
+        self._chunks.append(DataChunk(splitChunk,
+                      cantAnalogicos,
+                      cantInAmp,
+                      cantDigitales,
+                      intervalo,
+                      dateString))
+
+    def getChunks(self):
+        return self._chunks
+
+    def _getMetadataOf(self, data):
+        cantAnalogicos = int(data["data"][
+                             "canalesAnalogicos"])
+        cantInAmp = int(data["data"]["canalesInAmp"])
+        cantDigitales = int(data["data"][
+                            "canalesDigitales"])
+        intervalo = int(data["data"]["intervalo"])
+
+        dateString = _getDateStringOf(data)
+
+        return (cantAnalogicos,
+                cantInAmp,
+                cantDigitales,
+                intervalo,
+                dateString)
+
+
+class DataChunk():
+
+    def __init__(self, splitChunk, cantAnalogicos, cantInAmp,
+                 cantDigitales, intervalo, dateString):
+
+        self._sections = []
+
+        self.cantAnalogicos = cantAnalogicos
+        self.cantInAmp = cantInAmp
+        self.cantDigitales = cantDigitales
+        self.dateString = dateString
+        self.intervalo = intervalo
+
+        intervaloDelta = timedelta(seconds = intervalo)
+        lastDataTime = datetime.strptime(dateString, "%Y/%m/%d %H:%M:%S")
+
+        for data in splitChunk:
+            if data["type"] == "dataSection":
+                dataAnalog = data["data"]["analogicos"]
+                dataInAmp = data["data"]["inAmp"]
+                dataDigital = data["data"]["digitales"]
+                self._sections.append((dataAnalog, dataInAmp, dataDigital))
+
+                lastDataTime = lastDataTime + intervaloDelta
+
+            if data["type"] == "header":
+                if data["data"]["codigoInicio"] == "vueltaEnergia":
+                    vueltaEnergiaTime = datetime.strptime(
+                        _getDateStringOf(data), "%Y/%m/%d %H:%M:%S")
+
+                    deltaTimeSecs = vueltaEnergiaTime - lastDataTime
+                    deltaTimeIntervalos = int(deltaTimeSecs.total_seconds() / intervaloDelta.total_seconds())
+
+                    for i in range (deltaTimeIntervalos):
+                        """
+                        digitalesNone = [None] * self.cantDigitales
+                        analogicosNone = [None] * self.cantAnalogicos
+                        inAmpNone = [None] * self.cantInAmp
+
+                        self._sections.append((analogicosNone, inAmpNone, digitalesNone))
+                        """
+                        pass #TODO
+
+                else:
+                    lastDataTime = datetime.strptime(
+                        _getDateStringOf(data), "%Y/%m/%d %H:%M:%S")
+
+    def getSections(self):
+        return self._sections

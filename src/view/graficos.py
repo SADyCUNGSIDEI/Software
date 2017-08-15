@@ -88,12 +88,6 @@ class GraficosRegistro():
 
 class GraficoAnalogico():
 
-    pendiente = 1
-    ordenada = 0
-    unidad = ""
-
-    intervalo = 1
-
     def __init__(self, pendiente=1, ordenada=0, unidad="", nombre="Grafico Analogico",
                  isUnclosable=True, intervalo=1, intervaloStr="", fechaStr=""):
 
@@ -102,6 +96,7 @@ class GraficoAnalogico():
 
         self.xValues = []
         self.intervalo = intervalo
+        self.nextDataX = 0
 
         self.window = plot(title=nombre, labels={
                            'left': unidad}, isUnclosable=isUnclosable,
@@ -151,7 +146,10 @@ class GraficoDigital(GraficoAnalogico):
 
         self.data.append(trueData)
 
-        self.plotItem.setXRange(len(self.data) - 5, len(self.data) + 5)
+        dataLen = len(self.data)
+
+        self.plotItem.setXRange(
+            (dataLen + 20) * self.intervalo, (dataLen - 20) * self.intervalo)
 
         if trueData == 1:
             self.curve.setData(self.data, pen='g')
@@ -159,27 +157,13 @@ class GraficoDigital(GraficoAnalogico):
             self.curve.setData(self.data, pen='r')
 
 
-def openGraficosOf(data):  # TODO: cambiar a un disenio mas desacoplado
+def openGraficosOf(desencodedData):
 
-    firstHeader = data[0]
+    for dataChunk in desencodedData.getChunks():
+        graficos = GraficosRegistro(dataChunk.cantAnalogicos,
+                                    dataChunk.cantInAmp, 
+                                    dataChunk.cantDigitales,
+                                    dataChunk.dateString)
 
-    cantAnalogicos = int(firstHeader["data"]["canalesAnalogicos"])
-    cantInAmp = int(firstHeader["data"]["canalesInAmp"])
-    cantDigitales = int(firstHeader["data"]["canalesDigitales"])
-
-    dateString = firstHeader["data"]["anio"] + "/" + \
-        firstHeader["data"]["mes"] + \
-        "/" + firstHeader["data"]["dia"] + \
-        " " + firstHeader["data"]["hora"] + ":" + \
-        firstHeader["data"]["minutos"] + ":" + firstHeader["data"]["segundos"]
-
-    graficos = GraficosRegistro(
-        cantAnalogicos, cantInAmp, cantDigitales, dateString)
-
-    for d in data:
-        if d["type"] == "dataSection":
-            dataAnalog = d["data"]["analogicos"]
-            dataInAmp = d["data"]["inAmp"]
-            dataDigital = d["data"]["digitales"]
-
-            graficos.actualizeAll(dataAnalog, dataInAmp, dataDigital)
+        for analog, inAmp, digital in dataChunk.getSections():
+            graficos.actualizeAll(analog, inAmp, digital)
