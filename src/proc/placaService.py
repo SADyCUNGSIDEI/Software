@@ -39,6 +39,12 @@ def changeModeInstrRegistro():
     __estados["seteado"] = False
     __estados["midiendo"] = False
 
+def changeModeMedicionTiempo():
+    pause()
+    commandSender.setMode(6)
+    __estados["seteado"] = False
+    __estados["midiendo"] = False
+
 
 def setDateTime(dateTimeStr):
 

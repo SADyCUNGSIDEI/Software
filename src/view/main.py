@@ -5,6 +5,7 @@ import os
 from PyQt4 import QtGui, uic
 from PyQt4.QtGui import QFileDialog, QMessageBox
 from modoAdquisicionView import ModoAutomatizacionView, ModoInstrumentacionView
+from modoMedicionTiemposView import ModoMedicionTiemposView
 
 import graficos
 from relojConfig import RelojConfig
@@ -29,6 +30,8 @@ class MainWindow(QtGui.QMainWindow):
 
         self.actionAutomatizacion.triggered.connect(self.changeModoAutomat)
         self.actionInstrumentacion.triggered.connect(self.changeModoInstr)
+        self.actionMedicion_Tiempo.triggered.connect(
+            self.changeModoMedicionTiempo)
 
         self.actionDescargar_Datos.triggered.connect(self.descargaDatos)
         self.actionAbrir_Graficos.triggered.connect(self.abrirGraficos)
@@ -49,6 +52,13 @@ class MainWindow(QtGui.QMainWindow):
             self.setCentralWidget(ModoAutomatizacionView())
             QMessageBox.information(self, "Cambio de Modo",
                                     "Se cambio a Modo Automatizacion",
+                                    QMessageBox.Ok)
+
+    def changeModoMedicionTiempo(self):
+        if self.confirmaChangeModo():
+            self.setCentralWidget(ModoMedicionTiemposView())
+            QMessageBox.information(self, "Cambio de Modo",
+                                    "Se cambio a Modo Medicion de Tiempos",
                                     QMessageBox.Ok)
 
     def confirmaChangeModo(self):

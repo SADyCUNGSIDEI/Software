@@ -62,10 +62,22 @@ def getDateTime():
 
     return read(14)
 
+def setPinesMedTiempo(pin1, pin2):
+    __send("D" + str(pin1) + str(pin2))#TODO: se mandan como strings?
+
 
 def read(cantBytes):
     return port.read(cantBytes)
 
+def readLine():
+
+    line = ""
+    while True:
+        char = read(1)
+        if char == "\n":
+            break
+        line +=char
+    return line
 
 def getFromRegistro():
     __send("d")

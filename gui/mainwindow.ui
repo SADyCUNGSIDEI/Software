@@ -47,7 +47,7 @@
      <addaction name="actionInstrumentacion"/>
     </widget>
     <addaction name="menuMedicion"/>
-    <addaction name="actionIntervalo_de_tiempo"/>
+    <addaction name="actionMedicion_Tiempo"/>
     <addaction name="actionAutomatizacion_2"/>
    </widget>
    <widget class="QMenu" name="menuExperimento">
@@ -100,7 +100,7 @@
     <string>Automatizacion</string>
    </property>
   </action>
-  <action name="actionIntervalo_de_tiempo">
+  <action name="actionMedicion_Tiempo">
    <property name="text">
     <string>Medicion de Tiempos</string>
    </property>
